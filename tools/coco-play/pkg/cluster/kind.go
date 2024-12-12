@@ -34,3 +34,15 @@ func CreateCluster() error {
 
 	return nil
 }
+
+// DeleteCluster deletes the Kind cluster
+func DeleteCluster() error {
+	fmt.Printf("Deleting Kind cluster (%s)...\n", ClusterName)
+	provider := cluster.NewProvider(cluster.ProviderWithDocker())
+
+	if err := provider.Delete(ClusterName, KubeConfig); err != nil {
+		return errors.Errorf("Failed to delete cluster: %v", err)
+	}
+
+	return nil
+}
