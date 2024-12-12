@@ -1,4 +1,8 @@
-package main
+/*
+Copyright Confidential Containers Contributors
+SPDX-License-Identifier: Apache-2.0
+*/
+package kbs
 
 import (
 	"fmt"
@@ -6,15 +10,15 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/pkg/errors"
-
+	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/cluster"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/pkg/errors"
 )
 
 const KbsNamespace string = "coco-tenant"
 
-func installKbs(version string) error {
+func InstallKbs(version string) error {
 	var err error
 
 	fmt.Println("Install KBS...")
@@ -66,7 +70,7 @@ func installKbs(version string) error {
 	/*
 	 * Wait kbs is ready
 	 */
-	out, err := kubectl("rollout", "status", "-w", "deployment/kbs", "-n", KbsNamespace)
+	out, err := cluster.Kubectl("rollout", "status", "-w", "deployment/kbs", "-n", KbsNamespace)
 	if err != nil {
 		return errors.Errorf("Deployment is not ready after timeout: %v", err)
 	}
@@ -81,14 +85,14 @@ func installKbs(version string) error {
 }
 
 // getKbsAddress returns the host:port address of KBS
-func getKbsAddress() (string, error) {
-	host, err := kubectl("get", "nodes", "-o", "jsonpath='{.items[0].status.addresses[?(@.type==\"InternalIP\")].address}'", "-n", KbsNamespace)
+func GetKbsAddress() (string, error) {
+	host, err := cluster.Kubectl("get", "nodes", "-o", "jsonpath='{.items[0].status.addresses[?(@.type==\"InternalIP\")].address}'", "-n", KbsNamespace)
 	if err != nil {
 		return "", err
 	}
 	host = strings.Trim(host, "'")
 
-	port, err := kubectl("get", "svc", "kbs", "-n", KbsNamespace, "-o", "jsonpath='{.spec.ports[0].nodePort}'")
+	port, err := cluster.Kubectl("get", "svc", "kbs", "-n", KbsNamespace, "-o", "jsonpath='{.spec.ports[0].nodePort}'")
 	if err != nil {
 		return "", err
 	}
@@ -97,7 +101,7 @@ func getKbsAddress() (string, error) {
 	return fmt.Sprintf("%s:%s", host, port), nil
 }
 
-func setKbsResource(path, resourcefile string) error {
+func SetKbsResource(path, resourcefile string) error {
 	//kubectl exec deploy/kbs -- mkdir -p "/opt/confidential-containers/kbs/repository/$(dirname "$KEY_PATH")"
 	//cat "$KEY_FILE" | kubectl exec -i deploy/kbs -- tee "/opt/confidential-containers/kbs/repository/${KEY_PATH}" > /dev/null
 
