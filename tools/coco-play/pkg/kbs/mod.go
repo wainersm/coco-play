@@ -84,21 +84,32 @@ func InstallKbs(version string) error {
 	return nil
 }
 
-// getKbsAddress returns the host:port address of KBS
-func GetKbsAddress() (string, error) {
+// GetAddress returns the host:port address of KBS
+func GetAddress() (string, error) {
 	host, err := cluster.Kubectl("get", "nodes", "-o", "jsonpath='{.items[0].status.addresses[?(@.type==\"InternalIP\")].address}'", "-n", KbsNamespace)
 	if err != nil {
-		return "", err
+		return "", errors.Errorf("Failed to get host address: %v", err)
 	}
 	host = strings.Trim(host, "'")
 
 	port, err := cluster.Kubectl("get", "svc", "kbs", "-n", KbsNamespace, "-o", "jsonpath='{.spec.ports[0].nodePort}'")
 	if err != nil {
-		return "", err
+		return "", errors.Errorf("Failed to get port address: %v", err)
 	}
 	port = strings.Trim(port, "'")
 
 	return fmt.Sprintf("%s:%s", host, port), nil
+}
+
+// GetStatus returns the status of KBS, i.e, raw status of the kbs pod
+func GetStatus() (string, error) {
+	status, err := cluster.Kubectl("get", "pods", "-l", "app=kbs", "-n", KbsNamespace, "-o", "jsonpath='{.items[0].status.phase}'")
+	status = strings.Trim(status, "'")
+	if err != nil {
+		return "", errors.Errorf("Failed to get KBS status: %v", err)
+	}
+
+	return status, nil
 }
 
 func SetKbsResource(path, resourcefile string) error {
