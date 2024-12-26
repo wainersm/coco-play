@@ -1,0 +1,83 @@
+# (C) Copyright Confidential Containers Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# Build and check tools
+---
+name: tools CI
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  coco-play:
+    runs-on: ubuntu-24.04
+    env:
+        GO_VERSION: '1.22'
+    defaults:
+      run:
+        working-directory: tools/coco-play
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Golang version ${{ env.GO_VERSION }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache-dependency-path: "**/go.sum"
+
+      - name: Build
+        run: |
+          go build .
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'v1.29.4'
+
+      - name: test
+        run: |
+            echo "::group::Create play"
+            ./coco-play play-create
+            echo "::endgroup::"
+
+            echo "::group::Check KBS"
+            ./coco-play kbs-info | grep "Status: Running" || { echo "kbs not running"; exit 1; }
+            kbs_addr=$(./coco-play kbs-info | grep "Service address" | sed -e 's/Service address: //')
+            [ -n ${kbs_addr} ] || { echo "kbs address not found"; exit 1; }
+            echo "::endgroup::"
+
+            echo "::group::Create simple pod"
+            export kbs_addr
+            cat <<EOF>>coco-demo.yaml
+            apiVersion: v1
+            kind: Pod
+            metadata:
+              name: coco-demo
+              annotations:
+                "io.containerd.cri.runtime-handler": "kata-qemu-coco-dev"
+                io.katacontainers.config.hypervisor.kernel_params: " agent.aa_kbc_params=cc_kbc::http://${kbs_addr}"
+            spec:
+              runtimeClassName: kata-qemu-coco-dev
+              containers:
+                - name: busybox
+                  image: quay.io/prometheus/busybox:latest
+                  imagePullPolicy: Always
+                  command:
+                    - sh
+                    - -c
+                    - |
+                       wget -O- http://127.0.0.1:8006/cdh/resource/reponame/workload_key/key.bin; sleep infinity
+              restartPolicy: Never
+            EOF
+            cat coco-demo.yaml
+            kubectl apply -f coco-demo.yaml
+            kubectl wait --for=condition=Ready pod/coco-demo
+            sleep 5
+            kubectl logs coco-demo | grep somesecret || { kubectl logs coco-demo; exit 1; }
+            kubectl delete -f coco-demo.yaml
+            echo "::endgroup::"
