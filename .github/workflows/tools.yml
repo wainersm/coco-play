@@ -32,7 +32,14 @@ jobs:
 
       - name: Build
         run: |
-          go build .
+          COMMIT_SHORT="$(git rev-parse --short HEAD)"
+          echo "COMMIT_SHORT=${COMMIT_SHORT}" >> $GITHUB_ENV
+          LDFLAGS="-X 'github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/versions.GitCommit=${COMMIT_SHORT}'"
+          go build -ldflags="$LDFLAGS" .
+
+      - name: Check version
+        run: |
+          ./coco-play version | grep -e "coco-play version: .*-${COMMIT_SHORT}"
 
       - name: Install kubectl
         uses: azure/setup-kubectl@v4

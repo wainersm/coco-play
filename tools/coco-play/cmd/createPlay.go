@@ -8,6 +8,7 @@ import (
 	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/cluster"
 	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/coco"
 	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/kbs"
+	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/versions"
 	"github.com/spf13/cobra"
 )
 
@@ -26,12 +27,12 @@ var createPlayCmd = &cobra.Command{
 		if err = cluster.CreateCluster(); err != nil {
 			return err
 		}
-		cocoVersion := "v0.10.0"
-		if err = coco.Install(cocoVersion); err != nil {
+
+		if err = coco.Install(versions.CocoVersion); err != nil {
 			return err
 		}
 
-		if err = kbs.InstallKbs("v0.10.1"); err != nil {
+		if err = kbs.InstallKbs(versions.KbsVersion); err != nil {
 			return err
 		}
 
