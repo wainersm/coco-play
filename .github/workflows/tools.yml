@@ -88,3 +88,14 @@ jobs:
             kubectl logs coco-demo | grep somesecret || { kubectl logs coco-demo; exit 1; }
             kubectl delete -f coco-demo.yaml
             echo "::endgroup::"
+            echo "::group::Add resource to KBS"
+            echo "anothersecret" > key.txt
+            ./coco-play kbs-set-resource default/tests/key key.txt
+            sed -i 's#reponame/workload_key/key.bin#default/tests/key#' coco-demo.yaml
+            cat coco-demo.yaml
+            kubectl apply -f coco-demo.yaml
+            kubectl wait --for=condition=Ready pod/coco-demo
+            sleep 5
+            kubectl logs coco-demo | grep anothersecret || { kubectl logs coco-demo; exit 1; }
+            kubectl delete -f coco-demo.yaml
+            echo "::endgroup::"

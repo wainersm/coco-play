@@ -112,9 +112,21 @@ func GetStatus() (string, error) {
 	return status, nil
 }
 
-func SetKbsResource(path, resourcefile string) error {
-	//kubectl exec deploy/kbs -- mkdir -p "/opt/confidential-containers/kbs/repository/$(dirname "$KEY_PATH")"
-	//cat "$KEY_FILE" | kubectl exec -i deploy/kbs -- tee "/opt/confidential-containers/kbs/repository/${KEY_PATH}" > /dev/null
+func SetResource(path, resourcefile string) error {
+	basedir := path[:strings.LastIndex(path, "/")]
+	out, err := cluster.Kubectl_exec("deploy/kbs", KbsNamespace, "", "mkdir", "-p",
+		"/opt/confidential-containers/kbs/repository/"+basedir)
+	if err != nil {
+		fmt.Print(out)
+		return errors.Errorf("Failed to set resource (%s) in KBS: %v", path, err)
+	}
+	fmt.Print(out)
+
+	if out, err = cluster.Kubectl_exec("deploy/kbs", KbsNamespace, resourcefile, "tee",
+		"/opt/confidential-containers/kbs/repository/"+path); err != nil {
+		return errors.Errorf("Failed to set resource (%s) from %s in KBS: %v", path, resourcefile, err)
+	}
+	fmt.Print(out)
 
 	return nil
 }

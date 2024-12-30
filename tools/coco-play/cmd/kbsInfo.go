@@ -23,11 +23,11 @@ $ coco-play kbs-info
 Status: Running
 Service address: 172.18.0.2:30945`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		/*if status, err := kbs.GetStatus(); err != nil {
+		if status, err := kbs.GetStatus(); err != nil {
 			return err
 		} else {
 			fmt.Printf("Status: %s\n", status)
-		}*/
+		}
 		if addr, err := kbs.GetAddress(); err != nil {
 			return err
 		} else {

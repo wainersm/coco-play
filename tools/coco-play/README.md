@@ -124,6 +124,13 @@ writing to stdout
 written to stdout
 ```
 
+To add or update a resource key in the KBS, use the `kbs-set-resource` command. For example:
+
+```shell
+$ echo "somesecret" > key.txt
+$ ./coco-play kbs-set-resource default/tests/key key.txt
+```
+
 You may want to delete the playground when you are done. Run the `play-delete` command like below to delete the cluster:
 
 ```shell
