@@ -5,11 +5,11 @@ SPDX-License-Identifier: Apache-2.0
 package cmd
 
 import (
-	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/cluster"
-	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/coco"
-	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/kbs"
-	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/versions"
 	"github.com/spf13/cobra"
+	"github.com/wainersm/coco-play/pkg/cluster"
+	"github.com/wainersm/coco-play/pkg/coco"
+	"github.com/wainersm/coco-play/pkg/kbs"
+	"github.com/wainersm/coco-play/pkg/versions"
 )
 
 // createPlayCmd represents the play-create command

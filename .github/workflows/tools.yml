@@ -17,9 +17,6 @@ jobs:
     runs-on: ubuntu-24.04
     env:
         GO_VERSION: '1.22'
-    defaults:
-      run:
-        working-directory: tools/coco-play
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -34,7 +31,7 @@ jobs:
         run: |
           COMMIT_SHORT="$(git rev-parse --short HEAD)"
           echo "COMMIT_SHORT=${COMMIT_SHORT}" >> $GITHUB_ENV
-          LDFLAGS="-X 'github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/versions.GitCommit=${COMMIT_SHORT}'"
+          LDFLAGS="-X 'github.com/wainersm/coco-play/pkg/versions.GitCommit=${COMMIT_SHORT}'"
           go build -ldflags="$LDFLAGS" .
 
       - name: Check version

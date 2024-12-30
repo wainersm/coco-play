@@ -10,10 +10,10 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/cluster"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/pkg/errors"
+	"github.com/wainersm/coco-play/pkg/cluster"
 )
 
 const KbsNamespace string = "coco-tenant"

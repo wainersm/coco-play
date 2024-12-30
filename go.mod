@@ -1,4 +1,4 @@
-module github.com/confidential-containers/confidential-containers/tools/coco-play
+module github.com/wainersm/coco-play
 
 go 1.22.7
 

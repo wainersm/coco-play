@@ -5,8 +5,8 @@ SPDX-License-Identifier: Apache-2.0
 package cmd
 
 import (
-	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/cluster"
 	"github.com/spf13/cobra"
+	"github.com/wainersm/coco-play/pkg/cluster"
 )
 
 // deletePlayCmd represents the play-delete command

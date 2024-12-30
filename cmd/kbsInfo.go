@@ -6,8 +6,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/kbs"
 	"github.com/spf13/cobra"
+	"github.com/wainersm/coco-play/pkg/kbs"
 )
 
 // kbsInfoCmd represents the kbs-info command

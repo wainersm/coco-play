@@ -5,8 +5,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/confidential-containers/confidential-containers/tools/coco-play/cmd"
-	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/cluster"
+	"github.com/wainersm/coco-play/cmd"
+	"github.com/wainersm/coco-play/pkg/cluster"
 )
 
 func main() {

@@ -9,8 +9,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/kbs"
 	"github.com/spf13/cobra"
+	"github.com/wainersm/coco-play/pkg/kbs"
 )
 
 // kbsSetResourceCmd represents the kbs-set-resource command

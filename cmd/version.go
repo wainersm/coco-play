@@ -7,8 +7,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/versions"
 	"github.com/spf13/cobra"
+	"github.com/wainersm/coco-play/pkg/versions"
 )
 
 // versionCmd represents the version command

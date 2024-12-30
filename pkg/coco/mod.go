@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/confidential-containers/confidential-containers/tools/coco-play/pkg/cluster"
 	"github.com/pkg/errors"
+	"github.com/wainersm/coco-play/pkg/cluster"
 )
 
 func Install(version string) error {
