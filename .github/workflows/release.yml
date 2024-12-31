@@ -1,0 +1,48 @@
+# Copyright Confidential Containers Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+name: Release
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/tools.yml
+    with:
+      release: 'true'
+
+  release:
+    runs-on: ubuntu-24.04
+    needs: [build-and-test]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check the version
+        run: |
+          version="$(cat VERSION)"
+          echo "version=$version" >> "$GITHUB_ENV"
+
+      - name: Download the executable
+        uses: actions/download-artifact@v4
+        with:
+          name: coco-play-executable
+
+      - name: Rename the tool executable
+        run: |
+          executable="coco-play-${version/v/}"
+          mv coco-play "$executable"
+          echo "executable=$executable" >> "$GITHUB_ENV"
+
+      - name: Create a draft release
+        run: |
+          version="$(cat VERSION)"
+          gh release create "$version" -t "$version" --draft "$executable"
+        env:
+          GH_TOKEN: ${{ github.token }}

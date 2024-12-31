@@ -6,7 +6,11 @@
 name: tools CI
 on:
   pull_request:
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      release:
+        default: 'false'
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -96,3 +100,11 @@ jobs:
             kubectl logs coco-demo | grep anothersecret || { kubectl logs coco-demo; exit 1; }
             kubectl delete -f coco-demo.yaml
             echo "::endgroup::"
+
+      # Gonna upload the binary to later publish in a release
+      - name: Upload the executable
+        if: inputs.release == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coco-play-executable
+          path: ./coco-play
