@@ -41,7 +41,7 @@ var createPlayCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(createPlayCmd)
+	RootCmd.AddCommand(createPlayCmd)
 
 	// Here you will define your flags and configuration settings.
 
