@@ -24,7 +24,7 @@ var deletePlayCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(deletePlayCmd)
+	RootCmd.AddCommand(deletePlayCmd)
 
 	// Here you will define your flags and configuration settings.
 

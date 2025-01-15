@@ -11,7 +11,7 @@ import (
 )
 
 // rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
+var RootCmd = &cobra.Command{
 	Use:   "coco-play",
 	Short: "Confidential Containers playground tool",
 	Long: `The coco-play tool provides an environment where you can play with
@@ -39,7 +39,7 @@ To use it you must have installed in your local system:
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	err := rootCmd.Execute()
+	err := RootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
@@ -57,5 +57,5 @@ func init() {
 	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	// Disable the completion command
-	rootCmd.CompletionOptions.DisableDefaultCmd = true
+	RootCmd.CompletionOptions.DisableDefaultCmd = true
 }

@@ -39,7 +39,7 @@ Service address: 172.18.0.2:30945`,
 }
 
 func init() {
-	rootCmd.AddCommand(kbsInfoCmd)
+	RootCmd.AddCommand(kbsInfoCmd)
 
 	// Here you will define your flags and configuration settings.
 
