@@ -147,3 +147,9 @@ go build
 ```
 
 It's also recommended to have [kind](https://kind.sigs.k8s.io/) installed to use the tools bundled in Kind to allow better debugging of the cluster created if needed.
+
+End-to-end (e2e) tests are implemented in [test/e2e](./test/e2e/) to check the commands as of an end user. Run these tests to check your changes:
+
+```shell
+go test -v -count=1 ./test/e2e/
+```
